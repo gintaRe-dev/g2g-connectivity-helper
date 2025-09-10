@@ -1,0 +1,38 @@
+name: Create PModes and TrustStores
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  pmode_artefacts:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 create-pmodes.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PModes
+          path: ./build/*-pmode.xml
+
+  truststore_artefacts:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 create-truststores.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eDelivery truststores
+          path: |
+            ./build/ap-truststore.p12
+            ./build/tls-truststore.p12
+            ./build/ap-legacy-truststore.p12
+            ./build/tls-legacy-truststore.p12
